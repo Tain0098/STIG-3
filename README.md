@@ -20,13 +20,27 @@
     PowerShell Ver. : 5.1
 
 .USAGE
+    Put any usage instructions here.
+    Example syntax:
     PS C:\> .\STIG-ID-WN11-CC-000185.ps1
 #>
 
+# Define the registry path and value for WN11-CC-000185
 $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer"
 $valueName = "NoDriveTypeAutoRun"
-$valueData = 255
+$valueData = 255 # 0x000000FF in hexadecimal
 
-if (-not (Test-Path $registryPath)) { New-Item -Path $registryPath -Force }
+# Check if the registry path exists, if not create it
+if (-not (Test-Path $registryPath)) {
+    New-Item -Path $registryPath -Force
+}
+
+# Set the NoDriveTypeAutoRun value
 Set-ItemProperty -Path $registryPath -Name $valueName -Value $valueData -Type DWord
+
+# Output success message
 Write-Host "Registry value '$valueName' set to '$valueData' at '$registryPath'."
+
+# Confirmation of success
+Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "NoDriveTypeAutoRun"
+# Expected Value: NoDriveTypeAutoRun = 255
